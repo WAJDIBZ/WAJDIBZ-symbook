@@ -1,0 +1,33 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block title %}Test Email
+{% endblock %}
+
+{% block body %}
+	<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+		<div style="text-align: center; padding: 20px 0; background: linear-gradient(to right, #4f46e5, #7e3af2); color: white; border-radius: 6px 6px 0 0;">
+			<h1 style="margin: 0; font-size: 24px;">Test Email</h1>
+		</div>
+
+		<div style="padding: 20px;">
+			<p>Hello
+				{{ name }},</p>
+
+			<p>This is a test email to verify that the email system is working correctly.</p>
+
+			<p>Timestamp:
+				{{ timestamp|date('Y-m-d H:i:s') }}</p>
+
+			<p>If you received this email, it means your email configuration is working properly!</p>
+
+			<p>Regards,<br>Your Application</p>
+		</div>
+
+		<div style="text-align: center; padding: 15px; background-color: #f9fafb; color: #6b7280; border-top: 1px solid #e5e7eb; font-size: 12px; border-radius: 0 0 6px 6px;">
+			<p>This is an automated test email. Please do not reply.</p>
+			<p>©
+				{{ "now"|date("Y") }}
+				Your Application - All rights reserved</p>
+		</div>
+	</div>
+{% endblock %}

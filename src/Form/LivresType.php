@@ -67,16 +67,6 @@ class LivresType extends AbstractType
                 'required' => false,
 
             ])
-            ->add('slug', TextType::class, [
-                'label' => 'Slug',
-                'constraints' => [
-                    new Assert\NotBlank(['message' => 'Le slug est obligatoire.']),
-                    new Assert\Regex([
-                        'pattern' => '/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                        'message' => 'Le slug doit être en minuscules, sans espaces, et peut contenir des tirets.'
-                    ])
-                ]
-            ])
             ->add('resume', TextType::class, [
                 'label' => 'Résumé',
                 'required' => false,

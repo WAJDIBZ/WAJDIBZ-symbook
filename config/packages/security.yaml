@@ -17,11 +17,21 @@ security:
     main:
       lazy: true
       provider: app_user_provider
-      custom_authenticator: App\Security\LoginFormAuthenticator
+      custom_authenticator: App\Security\EmailVerificationAuthenticator
       logout:
         path: app_logout
         target: app_login
+        csrf_token_id: logout
+        enable_csrf: true # This is true by default in Symfony 7
+      remember_me:
+        secret: "%kernel.secret%"
+        lifetime: 604800 # 1 week
 
   access_control:
+    - { path: ^/verify/email, roles: PUBLIC_ACCESS }
+    - { path: ^/email-verification-required, roles: PUBLIC_ACCESS }
+    - { path: ^/register, roles: PUBLIC_ACCESS }
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/mot-de-passe-oublie, roles: PUBLIC_ACCESS }
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/profile, roles: ROLE_USER }

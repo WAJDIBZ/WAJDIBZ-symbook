@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OAuth2 Email Demo
+{% endblock %}
+
+{% block body %}
+	<div class="container py-4">
+		<h1 class="mb-4">OAuth2 Email Demo</h1>
+
+		<div class="card shadow">
+			<div class="card-header bg-primary text-white">
+				<h2 class="h5 mb-0">Send Test Email with OAuth2</h2>
+			</div>
+			<div class="card-body">
+				{% for label, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="alert alert-{{ label == 'error' ? 'danger' : label }}">
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endfor %}
+
+				{% if sent %}
+					<div class="alert alert-success">
+						<i class="fas fa-check-circle me-2"></i>
+						Email successfully sent with OAuth2 authentication!
+					</div>
+
+					<p>What happened behind the scenes:</p>
+					<ol>
+						<li>The system automatically checked if a valid OAuth2 token was available</li>
+						<li>If needed, it refreshed the access token using the stored refresh token</li>
+						<li>It sent the email using OAuth2 XOAUTH2 authentication</li>
+						<li>If there was any authentication issue, it would have invalidated the token and tried again</li>
+					</ol>
+				{% endif %}
+
+				{% if error %}
+					<div class="alert alert-danger">
+						<h5>Error Details:</h5>
+						<pre>{{ error }}</pre>
+					</div>
+				{% endif %}
+
+				<form method="post" class="mt-3">
+					<div class="mb-3">
+						<label for="email" class="form-label">Recipient Email:</label>
+						<input type="email" id="email" name="email" class="form-control" value="{{ recipient }}" required>
+						<div class="form-text">The test email will be sent to this address.</div>
+					</div>
+
+					<div class="d-grid gap-2">
+						<button type="submit" class="btn btn-primary">
+							<i class="fas fa-paper-plane me-2"></i>
+							Send Test Email with OAuth2
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="card-footer bg-light">
+				<div class="d-flex justify-content-between">
+					<a href="{{ path('home') }}" class="btn btn-outline-secondary">
+						<i class="fas fa-arrow-left me-1"></i>
+						Back to Home
+					</a>
+					<a href="{{ asset('OAUTH_README.md') }}" target="_blank" class="btn btn-outline-info">
+						<i class="fas fa-book me-1"></i>
+						OAuth2 Documentation
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-4">
+			<h3>How It Works</h3>
+			<p>
+				This demo uses our custom MailerService with automatic OAuth2 token refresh capability.
+								            The email is sent using XOAUTH2 authentication, which is more secure than password-based authentication.
+			</p>
+			<p>
+				The key components include:
+			</p>
+			<ul>
+				<li>
+					<code>OAuthTokenManager</code>
+					- Retrieves, caches and refreshes tokens</li>
+				<li>
+					<code>OAuth2SmtpTransport</code>
+					- Custom SMTP transport with OAuth2 support</li>
+				<li>
+					<code>XOAuth2Authenticator</code>
+					- Handles XOAUTH2 authentication protocol</li>
+			</ul>
+
+			<p class="mt-3">
+				<strong>Terminal Commands:</strong>
+			</p>
+			<pre class="bg-dark text-light p-3">
+# Generate OAuth tokens
+php bin/console app:generate-oauth-token
+
+# Test OAuth email sending
+php bin/console app:send-oauth-email
+</pre>
+		</div>
+	</div>
+{% endblock %}

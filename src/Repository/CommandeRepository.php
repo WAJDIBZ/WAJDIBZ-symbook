@@ -22,7 +22,8 @@ class CommandeRepository extends ServiceEntityRepository
                 'YEAR(c.dateCommande)   AS year',
                 'MONTH(c.dateCommande)  AS month',
                 'DAY(c.dateCommande)    AS day',
-                'COUNT(c.id)            AS nbCommandes'
+                'COUNT(c.id)            AS nbCommandes',
+                'SUM(c.montantTotal)    AS totalRevenue'
             )
             ->where('c.dateCommande BETWEEN :from AND :to')
             ->setParameter('from', $from)
@@ -31,6 +32,21 @@ class CommandeRepository extends ServiceEntityRepository
             ->orderBy('year, month, day', 'ASC');
 
         return $qb->getQuery()->getArrayResult();
+    }
+
+    public function getOrderStatsByPeriod(\DateTimeInterface $from, \DateTimeInterface $to): array
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select(
+                'COUNT(c.id) AS totalOrders',
+                'SUM(c.montantTotal) AS totalRevenue',
+                'AVG(c.montantTotal) AS averageOrderValue'
+            )
+            ->where('c.dateCommande BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
 

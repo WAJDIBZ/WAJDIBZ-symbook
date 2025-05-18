@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Email non vérifié
+{% endblock %}
+
+{% block body %}
+	<div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+		<div class="text-center mb-8">
+			<h2 class="font-display text-3xl font-bold text-gray-900">
+				Vérification d'email requise
+			</h2>
+		</div>
+
+		<div class="bg-white rounded-xl shadow-md overflow-hidden">
+			<div class="px-6 py-4 bg-gradient-to-r from-yellow-500 to-orange-500">
+				<h3 class="text-xl font-medium text-white">Accès limité</h3>
+			</div>
+
+			<div class="p-6">
+				<div class="flex items-center mb-8">
+					<div class="bg-yellow-100 rounded-full p-3 mr-4">
+						<svg class="h-8 w-8 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+						</svg>
+					</div>
+					<div>
+						<h4 class="text-lg font-medium text-gray-900">Votre compte n'est pas encore vérifié</h4>
+						<p class="text-sm text-gray-600">Pour accéder à votre compte, vous devez vérifier votre adresse email</p>
+					</div>
+				</div>
+
+				<div class="bg-yellow-50 rounded-lg p-4 mb-6 border border-yellow-100">
+					<p class="text-gray-800 mb-4">
+						Un email de vérification a été envoyé à
+						<span class="font-medium">{{ email }}</span>
+						lors de votre inscription. 
+						                    Veuillez cliquer sur le lien dans cet email pour activer votre compte.
+					</p>
+
+					<p class="text-sm text-gray-600">
+						Si vous n'avez pas reçu l'email, vérifiez votre dossier de spam ou cliquez sur le bouton ci-dessous pour recevoir un nouvel email de vérification.
+					</p>
+				</div>
+
+				<div class="flex justify-between items-center">
+					<a href="{{ path('app_resend_verification', {'email': email}) }}" class="px-4 py-2 rounded-md text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+						Renvoyer l'email de vérification
+					</a>
+
+					<a href="{{ path('app_login') }}" class="text-yellow-600 hover:text-yellow-800 text-sm font-medium">
+						Retour à la page de connexion
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

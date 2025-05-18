@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier - BookStore
+{% endblock %}
+
+{% block body %}
+	<div class="bg-gray-100 min-h-screen py-8">
+		<div
+			class="container mx-auto px-4">
+			<!-- En-tête de la page -->
+			<div class="mb-8">
+				<h1 class="text-3xl font-bold text-gray-800 mb-2">Mon panier</h1>
+				<p class="text-gray-600">Gérez vos achats et procédez au paiement.</p>
+			</div>
+
+			<!-- Message flash -->
+			{% for message in app.flashes('success') %}
+				<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
+					<span class="block sm:inline">{{ message }}</span>
+					<button class="absolute top-0 bottom-0 right-0 px-4 py-3" type="button" onclick="this.parentElement.style.display='none'">
+						<span class="sr-only">Fermer</span>
+						<svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20">
+							<title>Fermer</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+					</button>
+				</div>
+			{% endfor %}
+
+			{% if items|length > 0 %}
+				<div
+					class="flex flex-col lg:flex-row gap-8">
+					<!-- Articles du panier -->
+					<div class="w-full lg:w-2/3">
+						<div class="bg-white rounded-xl shadow-md overflow-hidden">
+							<div class="p-6 border-b border-gray-200">
+								<div class="flex justify-between items-center">
+									<h2 class="text-xl font-bold text-gray-800">Articles ({{ items|length }})</h2>
+									<a href="{{ path('app_panier_vider') }}" class="text-red-600 hover:text-red-800 text-sm font-medium" onclick="return confirm('Êtes-vous sûr de vouloir vider votre panier ?')">
+										<i class="fas fa-trash-alt mr-1"></i>
+										Vider le panier
+									</a>
+								</div>
+							</div>
+
+							<!-- Liste des articles -->
+							<div class="divide-y divide-gray-200">
+								{% for id, item in items %}
+									<div
+										class="p-6 flex flex-col sm:flex-row items-start sm:items-center">
+										<!-- Image -->
+										<div class="w-full sm:w-24 h-24 mb-4 sm:mb-0 sm:mr-6">
+											<img src="{{ item.image }}" alt="{{ item.titre }}" class="w-full h-full object-cover rounded-md">
+										</div>
+
+										<!-- Informations -->
+										<div class="flex-1 min-w-0">
+											<h3 class="text-lg font-medium text-gray-900 truncate">{{ item.titre }}</h3>
+											<p class="mt-1 text-sm text-gray-500">Prix unitaire:
+												{{ item.prix }}
+												DT</p>
+										</div>
+
+										<!-- Contrôles de quantité -->
+										<div class="mt-4 sm:mt-0 sm:ml-6">
+											<form action="{{ path('app_panier_maj', {id: id}) }}" method="post" class="flex items-center">
+												<div class="flex rounded-md shadow-sm">
+													<button type="button" onclick="decrementQuantity('quantite-{{ id }}')" class="px-3 py-1 bg-gray-100 text-gray-600 border border-gray-300 rounded-l-md hover:bg-gray-200">
+														<i class="fas fa-minus"></i>
+													</button>
+													<input type="number" id="quantite-{{ id }}" name="quantite" value="{{ item.quantite }}" min="1" class="block w-12 text-center border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">
+													<button type="button" onclick="incrementQuantity('quantite-{{ id }}')" class="px-3 py-1 bg-gray-100 text-gray-600 border border-gray-300 rounded-r-md hover:bg-gray-200">
+														<i class="fas fa-plus"></i>
+													</button>
+												</div>
+												<button type="submit" class="ml-2 text-indigo-600 hover:text-indigo-800">
+													<i class="fas fa-sync-alt"></i>
+												</button>
+											</form>
+										</div>
+
+										<!-- Sous-total et suppression -->
+										<div class="mt-4 sm:mt-0 sm:ml-6 text-right">
+											<div class="text-lg font-semibold text-gray-900">{{ (item.prix * item.quantite)|number_format(2, '.', ' ') }}
+												DT</div>
+											<a href="{{ path('app_panier_supprimer', {id: id}) }}" class="mt-1 text-sm text-red-600 hover:text-red-900">
+												<i class="fas fa-trash mr-1"></i>
+												Supprimer
+											</a>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+
+					<!-- Résumé de la commande -->
+					<div class="w-full lg:w-1/3">
+						<div class="bg-white rounded-xl shadow-md overflow-hidden sticky top-6">
+							<div class="p-6 border-b border-gray-200">
+								<h2 class="text-xl font-bold text-gray-800">Résumé de la commande</h2>
+							</div>
+							<div class="p-6 space-y-4">
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">Sous-total</span>
+									<span class="text-gray-900 font-medium">{{ total|number_format(2, '.', ' ') }}
+										DT</span>
+								</div>
+								<div class="flex justify-between items-center">
+									<span class="text-gray-600">Livraison</span>
+									<span class="text-gray-900 font-medium">Gratuite</span>
+								</div>
+								<div class="pt-4 border-t border-gray-200">
+									<div class="flex justify-between items-center">
+										<span class="text-lg font-bold text-gray-800">Total</span>
+										<span class="text-xl font-bold text-indigo-600">{{ total|number_format(2, '.', ' ') }}
+											DT</span>
+									</div>
+								</div>
+								<div class="pt-6">
+									<a href="#" id="checkout-button" class="block w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-medium rounded-md shadow-md transition-colors">
+										<i class="fas fa-lock mr-2"></i>
+										Passer la commande
+									</a>
+									<a href="{{ path('app_boutique_livres') }}" class="block w-full mt-4 py-3 px-4 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-center font-medium rounded-md transition-colors">
+										<i class="fas fa-shopping-bag mr-2"></i>
+										Continuer mes achats
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<!-- Panier vide -->
+				<div class="bg-white p-10 rounded-xl shadow-md text-center">
+					<div class="text-gray-400 text-8xl mb-6">
+						<i class="fas fa-shopping-cart"></i>
+					</div>
+					<h2 class="text-2xl font-bold text-gray-700 mb-2">Votre panier est vide</h2>
+					<p class="text-gray-500 mb-8">Découvrez notre sélection de livres et commencez votre shopping.</p>
+					<a href="{{ path('app_boutique_livres') }}" class="inline-block px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow-md transition-colors">
+						<i class="fas fa-book mr-2"></i>
+						Voir notre catalogue
+					</a>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	{% block javascripts %}
+		<script>
+			function decrementQuantity(id) {
+var input = document.getElementById(id);
+var value = parseInt(input.value, 10);
+if (value > 1) {
+input.value = value - 1;
+}
+}
+
+function incrementQuantity(id) {
+var input = document.getElementById(id);
+input.value = parseInt(input.value, 10) + 1;
+}
+		</script>
+		<script src="https://js.stripe.com/v3/"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+var stripe = Stripe('pk_test_51QfUHZRxEehTOYAcUzHqRzDCMsJl2QLGOYEbgqoPRaEx0GOh4uODC8vsUjDx4NBVLS6lQER7sz3S4bX74U58EtTn00oXseyKJb');
+var checkoutButton = document.getElementById('checkout-button');
+if (checkoutButton) {
+checkoutButton.addEventListener('click', function (e) {
+e.preventDefault();
+fetch('{{ path('panier_create_checkout_session') }}', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+}
+}).then(response => response.json()).then(session => {
+if (session.error) {
+alert(session.error);
+return;
+}
+return stripe.redirectToCheckout({sessionId: session.id});
+});
+});
+}
+});
+		</script>
+	{% endblock %}
+
+{% endblock %}

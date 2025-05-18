@@ -1,0 +1,40 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block title %}Vérification de votre adresse email
+{% endblock %}
+
+{% block body %}
+	<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+		<div style="text-align: center; padding: 20px 0; background: linear-gradient(to right, #4f46e5, #7e3af2); color: white; border-radius: 6px 6px 0 0;">
+			<h1 style="margin: 0; font-size: 24px;">Vérification de votre adresse email</h1>
+		</div>
+
+		<div style="padding: 20px;">
+			<p>Bonjour
+				{{ user.prenom }}
+				{{ user.nom }},</p>
+
+			<p>Merci de vous être inscrit sur notre plateforme. Veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous :</p>
+
+			<div style="text-align: center; margin: 30px 0;">
+				<a href="{{ url('app_verify_email', {'token': token}) }}" style="background: linear-gradient(to right, #4f46e5, #7e3af2); color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Confirmer mon adresse email</a>
+			</div>
+
+			<p>Si le bouton ne fonctionne pas, vous pouvez copier et coller le lien suivant dans votre navigateur :</p>
+			<p style="word-break: break-all; background-color: #f3f4f6; padding: 10px; border-radius: 4px;">{{ url('app_verify_email', {'token': token}) }}</p>
+
+			<p>Ce lien expirera dans 24 heures.</p>
+
+			<p>Si vous n'avez pas créé de compte sur notre site, veuillez ignorer cet email.</p>
+
+			<p>Cordialement,<br>L'équipe de support</p>
+		</div>
+
+		<div style="text-align: center; padding: 15px; background-color: #f9fafb; color: #6b7280; border-top: 1px solid #e5e7eb; font-size: 12px; border-radius: 0 0 6px 6px;">
+			<p>Cet email a été envoyé automatiquement. Merci de ne pas y répondre.</p>
+			<p>©
+				{{ "now"|date("Y") }}
+				Votre Entreprise - Tous droits réservés</p>
+		</div>
+	</div>
+{% endblock %}

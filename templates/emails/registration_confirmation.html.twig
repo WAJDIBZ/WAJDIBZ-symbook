@@ -1,0 +1,55 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block title %}Confirmation d'inscription
+{% endblock %}
+
+{% block body %}
+	<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+		<div style="text-align: center; padding: 20px 0; background: linear-gradient(to right, #4f46e5, #7e3af2); color: white; border-radius: 6px 6px 0 0;">
+			<h1 style="margin: 0; font-size: 24px;">Bienvenue sur notre plateforme!</h1>
+		</div>
+
+		<div style="padding: 20px;">
+			<p>Bonjour
+				{{ user.prenom }}
+				{{ user.nom }},</p>
+
+			<p>Nous sommes ravis de vous confirmer que votre inscription a bien été enregistrée.</p>
+
+			<p>Voici un récapitulatif de vos informations :</p>
+			<ul>
+				<li>
+					<strong>Nom :</strong>
+					{{ user.nom }}</li>
+				<li>
+					<strong>Prénom :</strong>
+					{{ user.prenom }}</li>
+				<li>
+					<strong>Email :</strong>
+					{{ user.email }}</li>
+				{% if user.adresse %}
+					<li>
+						<strong>Adresse :</strong>
+						{{ user.adresse }}</li>
+				{% endif %}
+			</ul>
+
+			<div style="text-align: center; margin: 30px 0;">
+				<a href="{{ url('app_login') }}" style="background: linear-gradient(to right, #4f46e5, #7e3af2); color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">Se connecter maintenant</a>
+			</div>
+
+			<p>Si vous avez des questions ou besoin d'aide, n'hésitez pas à nous contacter.</p>
+
+			<p>À bientôt sur notre plateforme!</p>
+
+			<p>L'équipe de support</p>
+		</div>
+
+		<div style="text-align: center; padding: 15px; background-color: #f9fafb; color: #6b7280; border-top: 1px solid #e5e7eb; font-size: 12px; border-radius: 0 0 6px 6px;">
+			<p>Cet email a été envoyé automatiquement. Merci de ne pas y répondre.</p>
+			<p>©
+				{{ "now"|date("Y") }}
+				Votre Entreprise - Tous droits réservés</p>
+		</div>
+	</div>
+{% endblock %}

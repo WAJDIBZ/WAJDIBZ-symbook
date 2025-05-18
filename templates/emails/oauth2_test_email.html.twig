@@ -1,0 +1,51 @@
+{# templates/emails/oauth2_test_email.html.twig #}
+{% extends 'emails/base_email.html.twig' %}
+
+{% block title %}Test OAuth2 Email
+{% endblock %}
+
+{% block body %}
+	<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px; background-color: #f9fafb;">
+		<div style="text-align: center; padding: 20px 0; background: linear-gradient(to right, #4f46e5, #7e3af2); color: white; border-radius: 6px 6px 0 0;">
+			<h1 style="margin: 0; font-size: 24px;">OAuth2 Test Email</h1>
+		</div>
+
+		<div style="padding: 20px; background-color: white; border-radius: 0 0 6px 6px;">
+			<p>Hello
+				{{ name }},</p>
+
+			<p>This is a test email sent using OAuth2 authentication with
+				<strong>automatic token refreshing</strong>.</p>
+
+			<div style="margin: 20px 0; padding: 15px; background-color: #f0f7ff; border-left: 4px solid #3b82f6; border-radius: 4px;">
+				<p style="margin: 0; font-weight: bold;">OAuth2 Authentication</p>
+				<p style="margin: 8px 0 0 0;">This email was sent at:
+					{{ timestamp|date('Y-m-d H:i:s') }}</p>
+				<p style="margin: 8px 0 0 0;">The access token was automatically retrieved and refreshed as needed.</p>
+				{% if note %}
+					<p style="margin: 8px 0 0 0; font-style: italic;">Note:
+						{{ note }}</p>
+				{% endif %}
+			</div>
+
+			<p>The advantages of using OAuth2 for email sending include:</p>
+
+			<ul style="padding-left: 20px; line-height: 1.5;">
+				<li>No need to store passwords in configuration</li>
+				<li>Better security with token-based authentication</li>
+				<li>Automatic token refresh without manual intervention</li>
+				<li>Support for two-factor authentication</li>
+				<li>Compliant with modern authentication standards</li>
+			</ul>
+
+			<p style="margin-top: 20px;">Best regards,<br>The Automated System</p>
+		</div>
+
+		<div style="text-align: center; padding: 15px; color: #6b7280; font-size: 12px; border-top: 1px solid #e5e7eb; margin-top: 20px;">
+			<p>This is an automated test email. Please do not reply.</p>
+			<p>©
+				{{ "now"|date("Y") }}
+				Your Company - All rights reserved</p>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+# Form field labels
+"Nom": "Name"
+"Votre nom": "Your name"
+"Prénom": "First name"
+"Votre prénom": "Your first name"
+"Email": "Email"
+"votre@email.com": "your@email.com"
+"Adresse": "Address"
+"Votre adresse complète": "Your complete address"
+"Mot de passe": "Password"
+"Choisissez un mot de passe sécurisé": "Choose a secure password"
+"Confirmer le mot de passe": "Confirm password"
+"Confirmez votre mot de passe": "Confirm your password"
+"J'accepte les conditions d'utilisation": "I accept the terms of use"
+
+# Success messages
+"Votre compte a été créé avec succès. Un email de confirmation vous a été envoyé.": "Your account has been successfully created. A confirmation email has been sent to you."
+"Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.": "Your account has been successfully created. You can now log in."
+
+# Warning messages
+"Votre compte a été créé, mais l'envoi de l'email de confirmation a échoué.": "Your account has been created, but sending the confirmation email failed."

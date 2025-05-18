@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BookStore - Catalogue de livres
+{% endblock %}
+
+{% block body %}
+	<div class="bg-gray-100 min-h-screen py-8">
+		<div
+			class="container mx-auto px-4">
+			<!-- Bannière de recherche -->
+			<div class="bg-gradient-to-r from-indigo-700 to-purple-800 rounded-xl shadow-lg p-8 mb-8">
+				<h1 class="text-3xl font-bold text-white mb-6">Rechercher un livre</h1>
+				<form action="{{ path('app_boutique_livres') }}" method="get" class="flex flex-col md:flex-row gap-4">
+					<div class="flex-grow">
+						<input type="text" name="search" placeholder="Titre, auteur, mot-clé..." value="{{ currentSearch }}" class="w-full px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+					</div>
+					<div class="w-full md:w-1/4">
+						<select name="categorie" class="w-full px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+							<option value="">Toutes les catégories</option>
+							{% for categorie in categories %}
+								<option value="{{ categorie.id }}" {% if currentCategorie is defined and currentCategorie == categorie.id %} selected {% endif %}>
+									{{ categorie.libelle }}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="w-full md:w-auto">
+						<button type="submit" class="w-full md:w-auto px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-bold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-300">
+							<i class="fas fa-search mr-2"></i>
+							Rechercher
+						</button>
+					</div>
+				</form>
+			</div>
+
+			<!-- Résultats et filtres -->
+			<div
+				class="flex flex-col lg:flex-row gap-8">
+				<!-- Sidebar avec filtres -->
+				<div class="w-full lg:w-1/4">
+					<div class="bg-white rounded-xl shadow-md p-6 mb-6">
+						<h2 class="font-bold text-lg mb-4 text-gray-800">Trier par</h2>
+						<div class="space-y-2">
+							{% set params = {search: currentSearch, categorie: currentCategorie} %}
+
+							<a href="{{ path('app_boutique_livres', params|merge({sort: 'l.titre', direction: 'asc'})) }}" class="block p-2 rounded {% if app.request.get('sort') == 'l.titre' and app.request.get('direction') != 'desc' %}bg-indigo-100 text-indigo-700{% else %}hover:bg-gray-50{% endif %} transition">
+								<i class="fas fa-sort-alpha-down mr-2"></i>
+								Titre (A-Z)
+							</a>
+
+							<a href="{{ path('app_boutique_livres', params|merge({sort: 'l.titre', direction: 'desc'})) }}" class="block p-2 rounded {% if app.request.get('sort') == 'l.titre' and app.request.get('direction') == 'desc' %}bg-indigo-100 text-indigo-700{% else %}hover:bg-gray-50{% endif %} transition">
+								<i class="fas fa-sort-alpha-up mr-2"></i>
+								Titre (Z-A)
+							</a>
+
+							<a href="{{ path('app_boutique_livres', params|merge({sort: 'l.prix', direction: 'asc'})) }}" class="block p-2 rounded {% if app.request.get('sort') == 'l.prix' and app.request.get('direction') != 'desc' %}bg-indigo-100 text-indigo-700{% else %}hover:bg-gray-50{% endif %} transition">
+								<i class="fas fa-sort-numeric-down mr-2"></i>
+								Prix (croissant)
+							</a>
+
+							<a href="{{ path('app_boutique_livres', params|merge({sort: 'l.prix', direction: 'desc'})) }}" class="block p-2 rounded {% if app.request.get('sort') == 'l.prix' and app.request.get('direction') == 'desc' %}bg-indigo-100 text-indigo-700{% else %}hover:bg-gray-50{% endif %} transition">
+								<i class="fas fa-sort-numeric-up mr-2"></i>
+								Prix (décroissant)
+							</a>
+
+							<a href="{{ path('app_boutique_livres', params|merge({sort: 'l.dateEdition', direction: 'desc'})) }}" class="block p-2 rounded {% if app.request.get('sort') == 'l.dateEdition' and app.request.get('direction') == 'desc' %}bg-indigo-100 text-indigo-700{% else %}hover:bg-gray-50{% endif %} transition">
+								<i class="fas fa-calendar-alt mr-2"></i>
+								Plus récents
+							</a>
+						</div>
+					</div>
+					<div class="bg-white rounded-xl shadow-md p-6">
+						<h2 class="font-bold text-lg mb-4 text-gray-800">Catégories</h2>
+						<div class="space-y-1">
+							<a href="{{ path('app_boutique_livres', {search: currentSearch}) }}" class="block p-2 rounded {% if currentCategorie is empty %}bg-indigo-100 text-indigo-700{% else %}hover:bg-gray-50{% endif %} transition">
+								Toutes les catégories
+							</a>
+							{% for categorie in categories %}
+								<a href="{{ path('app_boutique_livres', {search: currentSearch, categorie: categorie.id}) }}" class="block p-2 rounded {% if currentCategorie is defined and currentCategorie == categorie.id %}bg-indigo-100 text-indigo-700{% else %}hover:bg-gray-50{% endif %} transition">
+									{{ categorie.libelle }}
+								</a>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+
+				<!-- Grille de livres -->
+				<div class="w-full lg:w-3/4">
+					{% if livres|length > 0 %}
+						<div class="mb-6 flex flex-wrap justify-between items-center">
+							<h2 class="text-2xl font-bold text-gray-800">
+								{{ livres.getTotalItemCount }}
+								livre
+								{% if livres.getTotalItemCount > 1 %}s
+								{% endif %}
+								trouvé
+								{% if livres.getTotalItemCount > 1 %}s
+								{% endif %}
+							</h2>
+						</div>
+
+						<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+							{% for livre in livres %}
+								<div class="book-card rounded-xl overflow-hidden shadow-md bg-white transition-transform hover:shadow-lg">
+									<div class="relative h-64">
+										<img src="{{ livre.image }}" class="w-full h-full object-cover" alt="{{ livre.titre }}">
+										{% if livre.categorie %}
+											<span class="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+												{{ livre.categorie.libelle }}
+											</span>
+										{% endif %}
+									</div>
+									<div class="p-5 flex flex-col h-64">
+										<h3 class="font-bold text-lg mb-2 text-gray-800 line-clamp-2">{{ livre.titre }}</h3>
+										<p class="text-gray-500 text-sm mb-2">{{ livre.editeur }}</p>
+										<p class="text-gray-600 text-sm mb-4 line-clamp-3">
+											{{ livre.resume|slice(0, 100) }}
+											{% if livre.resume|length > 100 %}...
+											{% endif %}
+										</p>
+										<div class="mt-auto space-y-4">
+											<div class="flex justify-between items-center">
+												<span class="font-bold text-lg text-indigo-600">{{ livre.prix }}
+													DT</span>
+												<span class="text-sm text-gray-500">ISBN:
+													{{ livre.isbn }}</span>
+											</div>
+											<div class="flex space-x-2">
+												<a href="{{ path('app_boutique_livre_show', {id: livre.id}) }}" class="flex-1 text-center py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition">
+													<i class="fas fa-eye mr-1"></i>
+													Voir détail
+												</a>
+												<form action="{{ path('app_panier_ajouter', {id: livre.id}) }}" method="post" class="flex-1">
+													<input type="hidden" name="quantite" value="1">
+													<button type="submit" class="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-indigo-900 font-medium rounded-lg transition">
+														<i class="fas fa-cart-plus mr-1"></i>
+														Ajouter
+													</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+
+						<!-- Pagination -->
+						<div class="mt-10 flex justify-center">
+							{{ knp_pagination_render(livres, '@KnpPaginator/Pagination/tailwindcss_pagination.html.twig') }}
+						</div>
+					{% else %}
+						<div class="bg-white p-10 rounded-xl shadow text-center">
+							<div class="text-gray-400 text-6xl mb-4">
+								<i class="fas fa-search"></i>
+							</div>
+							<h3 class="text-2xl font-bold text-gray-700 mb-2">Aucun livre trouvé</h3>
+							<p class="text-gray-500 mb-6">Essayez de modifier vos critères de recherche.</p>
+							<a href="{{ path('app_boutique_livres') }}" class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+								Voir tous les livres
+							</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

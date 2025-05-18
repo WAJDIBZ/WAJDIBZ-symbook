@@ -11,14 +11,14 @@
 		{{ commande.id }}</p>
 	<p>
 		<strong>Date:</strong>
-		{{ commande.date|date('d/m/Y') }}</p>
+		{{ commande.dateCommande|date('d/m/Y') }}</p>
 	<p>
 		<strong>Client:</strong>
-		{{ commande.client.nom }}</p>
+		{{ commande.user.nom }}</p>
 	<p>
 		<strong>Total:</strong>
-		{{ commande.total }}
-		€</p>
+		{{ commande.montantTotal }}
+		DT</p>
 
 	<a href="{{ path('app_commandes_all') }}" class="btn btn-secondary">Retour à la liste</a>
 {% endblock %}

@@ -18,18 +18,35 @@ class ArticleCommandeRepository extends ServiceEntityRepository
     public function findBestSellingBook(\DateTimeInterface $from, \DateTimeInterface $to): ?array
     {
         $qb = $this->createQueryBuilder('ac')
-            ->select('IDENTITY(ac.livre) AS livreId, l.titre AS titre, SUM(ac.quantite) AS totalVendu')
+            ->select('IDENTITY(ac.livre) AS livreId, l.titre AS titre, l.image AS image, l.prix AS prix, 
+                     SUM(ac.quantite) AS totalVendu, SUM(ac.prix * ac.quantite) AS chiffreAffaire')
             ->join('ac.livre', 'l')
             ->join('ac.commande', 'c')
             ->where('c.dateCommande BETWEEN :from AND :to')
             ->setParameter('from', $from)
             ->setParameter('to', $to)
-
             ->groupBy('ac.livre')
             ->orderBy('totalVendu', 'DESC')
             ->setMaxResults(1);
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function findTopSellingBooks(\DateTimeInterface $from, \DateTimeInterface $to, int $limit = 5): array
+    {
+        $qb = $this->createQueryBuilder('ac')
+            ->select('IDENTITY(ac.livre) AS livreId, l.titre AS titre, l.image AS image, 
+                     SUM(ac.quantite) AS totalVendu, SUM(ac.prix * ac.quantite) AS chiffreAffaire')
+            ->join('ac.livre', 'l')
+            ->join('ac.commande', 'c')
+            ->where('c.dateCommande BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->groupBy('ac.livre')
+            ->orderBy('totalVendu', 'DESC')
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getArrayResult();
     }
 
 

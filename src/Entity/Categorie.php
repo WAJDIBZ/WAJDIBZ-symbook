@@ -8,8 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Cocur\Slugify\Slugify;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(
     fields: ['libelle'],
     message: 'Cette catégorie existe déjà.'
@@ -123,5 +125,15 @@ class Categorie
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if ($this->libelle) {
+            $slugify = new Slugify();
+            $this->slug = $slugify->slugify($this->libelle);
+        }
     }
 }

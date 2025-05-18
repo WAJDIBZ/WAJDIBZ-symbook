@@ -1,1 +1,12 @@
-Invalid credentials.: Identifiants invalides.
+# Messages de sécurité en français
+"Invalid credentials.": "L'adresse e-mail ou le mot de passe est incorrect."
+"Bad credentials.": "L'adresse e-mail ou le mot de passe est incorrect."
+"The presented password is invalid.": "Le mot de passe fourni est invalide."
+"The presented password cannot be empty.": "Le mot de passe ne peut pas être vide."
+"User account is disabled.": "Votre compte est désactivé."
+"User account is locked.": "Votre compte est bloqué."
+"Account is disabled.": "Votre compte est désactivé."
+"Account is locked.": "Votre compte est bloqué."
+"Username could not be found.": "Cet utilisateur n'existe pas."
+"Email could not be found.": "Cette adresse e-mail n'existe pas."
+"Authentication request could not be processed due to a system problem.": "La demande d'authentification n'a pas pu être traitée en raison d'un problème système."

@@ -16,15 +16,14 @@
 			</p>
 		</div>
 
-		<!-- Registration Card -->
+		<!-- Registration  -->
 		<div
 			class="bg-white rounded-xl shadow-xl overflow-hidden">
-			<!-- Card Header -->
+	
 			<div class="px-6 py-4 bg-gradient-to-r from-indigo-800 to-purple-700">
 				<h3 class="text-xl font-medium text-white">Créer un compte</h3>
 			</div>
 
-			<!-- Card Body -->
 			<div class="px-6 py-6">
 				{% for flash_error in app.flashes('verify_email_error') %}
 					<div class="mb-6 rounded-md bg-red-50 p-4 border border-red-200">
@@ -39,7 +38,27 @@
 					</div>
 				{% endfor %}
 
-				{{ form_start(registrationForm, {'attr': {'class': 'space-y-6'}}) }}
+				{% if app.flashes('error') is not empty %}
+					<div class="mb-6 rounded-md bg-red-50 p-4 border border-red-200">
+						<div class="flex">
+							<div class="flex-shrink-0">
+								<i class="fas fa-exclamation-circle text-red-400"></i>
+							</div>
+							<div class="ml-3">
+								<p class="text-sm font-medium text-red-800">{{ app.flashes('error')[0] }}</p>
+								{% if app.flashes('form_error') is not empty %}
+									<ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+										{% for error in app.flashes('form_error') %}
+											<li>{{ error }}</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				{% endif %}
+
+				{{ form_start(registrationForm, {'attr': {'class': 'space-y-6', 'data-controller': 'registration-validation', 'data-action': 'submit->registration-validation#validateForm', 'data-registration-validation-target': 'form'}}) }}
 
 				<!-- Name Fields -->
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -47,8 +66,10 @@
 						{{ form_label(registrationForm.nom, 'Nom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
 						{{ form_widget(registrationForm.nom, {'attr': {
               'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
-              'placeholder': 'Votre nom'
+              'placeholder': 'Votre nom',
+              'data-registration-validation-target': 'nomInput'
             }}) }}
+						<p class="text-xs text-gray-500 mt-1">Utilisez uniquement des lettres, espaces, apostrophes et tirets (2-50 caractères).</p>
 						{{ form_errors(registrationForm.nom, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
 					</div>
 
@@ -56,8 +77,10 @@
 						{{ form_label(registrationForm.prenom, 'Prénom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
 						{{ form_widget(registrationForm.prenom, {'attr': {
               'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
-              'placeholder': 'Votre prénom'
+              'placeholder': 'Votre prénom',
+              'data-registration-validation-target': 'prenomInput'
             }}) }}
+						<p class="text-xs text-gray-500 mt-1">Utilisez uniquement des lettres, espaces, apostrophes et tirets (2-50 caractères).</p>
 						{{ form_errors(registrationForm.prenom, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
 					</div>
 				</div>
@@ -71,9 +94,11 @@
 						</div>
 						{{ form_widget(registrationForm.email, {'attr': {
               'class': 'block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
-              'placeholder': 'votre@email.com'
+              'placeholder': 'votre@email.com',
+              'data-registration-validation-target': 'emailInput'
             }}) }}
 					</div>
+					<p class="text-xs text-gray-500 mt-1">Entrez une adresse email valide. Elle sera utilisée pour vérifier votre compte.</p>
 					{{ form_errors(registrationForm.email, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
 				</div>
 
@@ -91,35 +116,40 @@
 					</div>
 					{{ form_errors(registrationForm.adresse, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
 				</div>
-
 				<!-- Password Fields -->
 				<div class="space-y-6">
 					<div>
-						{{ form_label(registrationForm.password.first, 'Mot de passe', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+						{{ form_label(registrationForm.plainPassword.first, 'Mot de passe', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
 						<div class="relative rounded-md shadow-sm">
 							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 								<i class="fas fa-lock text-gray-400"></i>
 							</div>
-							{{ form_widget(registrationForm.password.first, {'attr': {
+							{{ form_widget(registrationForm.plainPassword.first, {'attr': {
                 'class': 'block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
-                'placeholder': 'Choisissez un mot de passe sécurisé'
+                'placeholder': 'Choisissez un mot de passe sécurisé',
+                'data-registration-validation-target': 'passwordInput'
               }}) }}
 						</div>
-						{{ form_errors(registrationForm.password.first, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+						<div class="mt-1">
+							<div data-registration-validation-target="passwordStrength" class="h-2 rounded bg-gray-200"></div>
+							<p class="text-xs text-gray-500 mt-1">Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
+						</div>
+						{{ form_errors(registrationForm.plainPassword.first, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
 					</div>
 
 					<div>
-						{{ form_label(registrationForm.password.second, 'Confirmer le mot de passe', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+						{{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
 						<div class="relative rounded-md shadow-sm">
 							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 								<i class="fas fa-lock text-gray-400"></i>
 							</div>
-							{{ form_widget(registrationForm.password.second, {'attr': {
+							{{ form_widget(registrationForm.plainPassword.second, {'attr': {
                 'class': 'block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
-                'placeholder': 'Confirmez votre mot de passe'
+                'placeholder': 'Confirmez votre mot de passe',
+                'data-registration-validation-target': 'confirmPasswordInput'
               }}) }}
 						</div>
-						{{ form_errors(registrationForm.password.second, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+						{{ form_errors(registrationForm.plainPassword.second, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
 					</div>
 				</div>
 
@@ -137,7 +167,7 @@
 
 				<!-- Submit Button -->
 				<div>
-					<button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
+					<button type="submit" data-registration-validation-target="submitButton" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
 						<i class="fas fa-user-plus mr-2"></i>
 						S'inscrire
 					</button>

@@ -35,7 +35,11 @@
 								</div>
 								<div class="ml-3">
 									<p class="text-sm font-medium text-red-800">
-										{{ error.messageKey|trans(error.messageData, 'security') }}
+										{% if error.messageKey == 'Invalid credentials.' or error.messageKey == 'Bad credentials.' %}
+											L'adresse e-mail ou le mot de passe est incorrect.
+										{% else %}
+											{{ error.messageKey|trans(error.messageData, 'security') }}
+										{% endif %}
 									</p>
 								</div>
 							</div>
@@ -53,7 +57,10 @@
 										<p class="text-sm font-medium text-blue-800">
 											Vous êtes connecté en tant que
 											{{ app.user.userIdentifier }},
-											<a href="{{ path('app_logout') }}" class="font-semibold underline hover:text-indigo-700">Se déconnecter</a>
+											<form action="{{ path('app_logout') }}" method="post" class="inline">
+												<input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+												<button type="submit" class="font-semibold underline hover:text-indigo-700 bg-transparent p-0 border-0">Se déconnecter</button>
+											</form>
 										</p>
 									</div>
 								</div>
@@ -77,7 +84,7 @@
 							<div>
 								<div class="flex items-center justify-between">
 									<label for="inputPassword" class="block text-sm font-medium text-gray-700">Mot de passe</label>
-									<a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">
+									<a href="{{ path('app_reset_password_request') }}" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">
 										Mot de passe oublié?
 									</a>
 								</div>
@@ -88,7 +95,6 @@
 									<input type="password" name="password" id="inputPassword" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" autocomplete="current-password" required placeholder="••••••••">
 								</div>
 							</div>
-
 							<!-- CSRF Token -->
 							<input
 							type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -163,12 +169,15 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-{% if error and error.messageKey == 'Invalid credentials.' %}
-Swal.fire({icon: 'error', title: 'Erreur', text: 'Identifiants invalides. Veuillez réessayer.'});
+{% if app.flashes('login_error') is not empty %}
+Swal.fire({icon: 'error', title: 'Erreur', text: "{{ app.flashes('login_error')|first }}"});
 {% elseif error %}
-Swal.fire({icon: 'error', title: 'Erreur', text: '{{ error.messageKey|trans(error.messageData, 'security') }}'});
+{% if error.messageKey == 'Invalid credentials.' or error.messageKey == 'Bad credentials.' %}
+Swal.fire({icon: 'error', title: 'Erreur', text: "L'adresse e-mail ou le mot de passe est incorrect."});
+{% else %}
+Swal.fire({icon: 'error', title: 'Erreur', text: '{{ error.messageKey|trans(error.messageData, 'security') }}'});{% endif %}
 {% elseif app.user %}
-Swal.fire({icon: 'success', title: 'Succès', text: 'Connexion réussie en tant que  {{ app.user.userIdentifier }}.'});{% endif %}
+Swal.fire({icon: 'success', title: 'Succès', text: 'Connexion réussie en tant que      {{ app.user.userIdentifier }}.'});{% endif %}
 });
 	</script>
 {% endblock %}

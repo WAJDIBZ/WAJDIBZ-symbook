@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Cocur\Slugify\Slugify;
 
 #[ORM\Entity(repositoryClass: LivresRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Livres
 {
     #[ORM\Id]
@@ -195,5 +197,15 @@ class Livres
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if ($this->titre) {
+            $slugify = new Slugify();
+            $this->slug = $slugify->slugify($this->titre);
+        }
     }
 }

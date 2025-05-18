@@ -1,0 +1,5 @@
+security:
+  "Invalid credentials.": "L'adresse e-mail ou le mot de passe est incorrect."
+  "Invalid credentials": "L'adresse e-mail ou le mot de passe est incorrect."
+  "Bad credentials.": "L'adresse e-mail ou le mot de passe est incorrect."
+  "Bad credentials": "L'adresse e-mail ou le mot de passe est incorrect."

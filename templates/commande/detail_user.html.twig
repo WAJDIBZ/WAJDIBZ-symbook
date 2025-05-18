@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de ma commande
+{% endblock %}
+
+{% block body %}
+	<div class="max-w-2xl mx-auto py-10">
+		<h1 class="text-3xl font-bold mb-6 text-indigo-800">Détail de ma commande</h1>
+		<div class="bg-white rounded-xl shadow p-8 mb-8">
+			<div class="mb-4 flex flex-col md:flex-row md:justify-between md:items-center">
+				<div>
+					<p class="text-gray-600 text-sm">Commande n°
+						<span class="font-bold text-indigo-700">{{ commande.id }}</span>
+					</p>
+					<p class="text-gray-600 text-sm">Date :
+						<span class="font-medium">{{ commande.dateCommande|date('d/m/Y') }}</span>
+					</p>
+					<p class="text-gray-600 text-sm">Statut :
+						{% if commande.statut == 'Livrée' %}
+							<span class="px-2 py-1 rounded bg-green-100 text-green-800 text-xs font-semibold">Livrée</span>
+						{% elseif commande.statut == 'En cours' %}
+							<span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800 text-xs font-semibold">En cours</span>
+						{% else %}
+							<span class="px-2 py-1 rounded bg-gray-100 text-gray-800 text-xs font-semibold">{{ commande.statut }}</span>
+						{% endif %}
+					</p>
+				</div>
+				<div class="mt-4 md:mt-0">
+					<p class="text-lg font-bold text-indigo-700">Total :
+						{{ commande.montantTotal }}
+						DT</p>
+				</div>
+			</div>
+			<hr class="my-4">
+			<h2 class="text-lg font-semibold text-gray-800 mb-4">Articles commandés</h2>
+			<div class="overflow-x-auto">
+				<table class="min-w-full divide-y divide-gray-200">
+					<thead class="bg-gray-50">
+						<tr>
+							<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Livre</th>
+							<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Quantité</th>
+							<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Prix unitaire</th>
+							<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Sous-total</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-gray-200">
+						{% for article in commande.articleCommandes %}
+							<tr>
+								<td class="px-4 py-2 text-sm text-gray-900">{{ article.livre.titre }}</td>
+								<td class="px-4 py-2 text-sm text-gray-900">{{ article.quantite }}</td>
+								<td class="px-4 py-2 text-sm text-gray-900">{{ article.prix }}
+									DT</td>
+								<td class="px-4 py-2 text-sm text-gray-900">{{ (article.prix * article.quantite)|number_format(2, '.', ' ') }}
+									DT</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<a href="{{ path('app_mes_commandes') }}" class="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Retour à mes commandes</a>
+	</div>
+{% endblock %}

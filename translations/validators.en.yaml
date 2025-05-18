@@ -1,0 +1,14 @@
+# Password validation messages
+"Le mot de passe est obligatoire.": "Password is required."
+"Veuillez entrer un mot de passe": "Please enter a password."
+"Votre mot de passe doit comporter au moins {{ limit }} caractères": "Your password must be at least {{ limit }} characters long."
+"Les champs de mot de passe doivent correspondre.": "The password fields must match."
+"Le mot de passe doit contenir au moins {{ limit }} caractères.": "The password must contain at least {{ limit }} characters."
+
+# General validation messages
+"Vous devez accepter les conditions d'utilisation.": "You must accept the terms of use."
+"Le nom est obligatoire.": "Name is required."
+"Le prénom est obligatoire.": "First name is required."
+"Le nom ne peut pas dépasser {{ limit }} caractères.": "Name cannot exceed {{ limit }} characters."
+"L'email est obligatoire.": "Email is required."
+"Cette adresse email n'est pas valide.": "This email address is not valid."

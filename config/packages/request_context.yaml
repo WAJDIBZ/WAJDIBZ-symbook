@@ -1,0 +1,7 @@
+# This file configures the base URL for absolute URL generation when not in a web request
+# It's used by commands like app:send-verification-email that need to generate URLs
+
+parameters:
+  router.request_context.host: "localhost"
+  router.request_context.scheme: "http"
+  router.request_context.port: "8000"
