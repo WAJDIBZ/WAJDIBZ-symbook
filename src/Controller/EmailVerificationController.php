@@ -17,21 +17,21 @@ class EmailVerificationController extends AbstractController
         UserRepository $userRepository,
         EntityManagerInterface $entityManager
     ): Response {
-        // Find the user by verification token
+
         $user = $userRepository->findOneBy(['verificationToken' => $token]);
 
-        // Check if user exists and token is valid
+       
         if (null === $user) {
             $this->addFlash('error', 'Le lien de vérification est invalide ou a expiré.');
             return $this->redirectToRoute('app_login');
         }
 
-        // Mark the user as verified
+        // Marker utlisateur est verifie
         $user->setIsVerified(true);
-        $user->setVerificationToken(null); // Clear the token after verification
+        $user->setVerificationToken(null);
         $entityManager->flush();
 
-        // Flash message & redirect
+       
         $this->addFlash('success', 'Votre adresse email a été vérifiée avec succès. Vous pouvez maintenant vous connecter.');
         return $this->redirectToRoute('app_login');
     }

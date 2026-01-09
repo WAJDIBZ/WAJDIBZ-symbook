@@ -12,10 +12,10 @@ class LoginController extends AbstractController
     #[Route("/login", name: "app_login")]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // Récupération de l'erreur d'authentification
+        // Récuperer l'erreur
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        // Personnalisation du message d'erreur pour "Invalid credentials"
+        // message d'erreur
         if ($error && ($error->getMessageKey() === 'Invalid credentials.' || $error->getMessageKey() === 'Bad credentials.')) {
             $this->addFlash('login_error', "L'adresse e-mail ou le mot de passe est incorrect.");
         }

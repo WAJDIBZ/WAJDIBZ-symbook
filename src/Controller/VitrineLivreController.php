@@ -198,9 +198,9 @@ class VitrineLivreController extends AbstractController
         }
 
         $panier = $session->get('panier', []);
-        $lineItems = [];
+        $elements = [];
         foreach ($panier as $item) {
-            $lineItems[] = [
+            $elements[] = [
                 'price_data' => [
                     'currency' => 'eur',
                     'product_data' => [
@@ -212,7 +212,7 @@ class VitrineLivreController extends AbstractController
             ];
         }
 
-        if (empty($lineItems)) {
+        if (empty($elements)) {
             return new JsonResponse(['error' => 'Panier vide'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -221,7 +221,7 @@ class VitrineLivreController extends AbstractController
         try {
             $checkout_session = StripeSession::create([
                 'payment_method_types' => ['card'],
-                'line_items' => $lineItems,
+                'line_items' => $elements,
                 'mode' => 'payment',
                 'success_url' => $request->getSchemeAndHttpHost() . $this->generateUrl('panier_stripe_success'),
                 'cancel_url' => $request->getSchemeAndHttpHost() . $this->generateUrl('app_panier'),
