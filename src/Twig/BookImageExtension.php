@@ -10,9 +10,7 @@ use Twig\TwigFilter;
 
 final class BookImageExtension extends AbstractExtension
 {
-    public function __construct(private readonly Packages $packages)
-    {
-    }
+    public function __construct(private readonly Packages $packages) {}
 
     public function getFilters(): array
     {
@@ -43,8 +41,8 @@ final class BookImageExtension extends AbstractExtension
             return $this->packages->getUrl($image);
         }
 
-        $prefix = rtrim($defaultUploadPrefix, '/').'/';
+        $prefix = rtrim($defaultUploadPrefix, '/') . '/';
 
-        return $this->packages->getUrl($prefix.$image);
+        return $this->packages->getUrl($prefix . $image);
     }
 }

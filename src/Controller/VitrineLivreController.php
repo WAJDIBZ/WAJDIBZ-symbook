@@ -195,8 +195,7 @@ class VitrineLivreController extends AbstractController
         SessionInterface $session,
         LivresRepository $livresRepository,
         #[Autowire('%env(default::STRIPE_SECRET_KEY)%')] string $stripeSecretKey
-    ): Response
-    {
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
         if (!$user instanceof User) {

@@ -36,19 +36,19 @@ docker compose up -d
 
 If you don't have Docker installed, you can run the app with SQLite:
 
-1) Create `.env.local`:
+1. Create `.env.local`:
 
 ```bash
 copy .env.local.example .env.local
 ```
 
-2) Edit `.env.local` and set:
+2. Edit `.env.local` and set:
 
 ```env
 DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
 ```
 
-3) Run migrations/fixtures as usual.
+3. Run migrations/fixtures as usual.
 
 ### 2) Install PHP dependencies
 
