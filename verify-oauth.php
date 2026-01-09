@@ -5,11 +5,16 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// OAuth credentials from .env.local
-$clientId = '508483236914-j5us698pbtk8e05162ogpatt39g5hi0q.apps.googleusercontent.com';
-$clientSecret = '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';
-$refreshToken = '1//04gmcFNs5dyDhCgYIARAAGAQSNwF-L9IrHDgXg4KWen6-O8uN4X0zvjVA3J6C0v1v74TBrTc9fs3Jj6Am1RKEHYiAP_8kGylXIP4';
-$tokenUrl = 'https://oauth2.googleapis.com/token';
+// OAuth credentials from environment (recommended: put them in .env.local)
+$clientId = getenv('OAUTH_CLIENT_ID') ?: '';
+$clientSecret = getenv('OAUTH_CLIENT_SECRET') ?: '';
+$refreshToken = getenv('OAUTH_REFRESH_TOKEN') ?: '';
+$tokenUrl = getenv('OAUTH_TOKEN_URL') ?: 'https://oauth2.googleapis.com/token';
+
+if ($clientId === '' || $clientSecret === '' || $refreshToken === '') {
+    fwrite(STDERR, "ERROR: Missing OAuth env vars. Set OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_REFRESH_TOKEN.\n");
+    exit(1);
+}
 
 echo "Verifying OAuth credentials...\n";
 

@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use App\Entity\Commande;
 use App\Entity\ArticleCommande;
 use App\Entity\User;
@@ -189,7 +190,12 @@ class VitrineLivreController extends AbstractController
     }
 
     #[Route('/panier/create-checkout-session', name: 'panier_create_checkout_session', methods: ['POST'])]
-    public function createCheckoutSession(Request $request, SessionInterface $session, LivresRepository $livresRepository): Response
+    public function createCheckoutSession(
+        Request $request,
+        SessionInterface $session,
+        LivresRepository $livresRepository,
+        #[Autowire('%env(default::STRIPE_SECRET_KEY)%')] string $stripeSecretKey
+    ): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $user = $this->getUser();
@@ -216,7 +222,15 @@ class VitrineLivreController extends AbstractController
             return new JsonResponse(['error' => 'Panier vide'], Response::HTTP_BAD_REQUEST);
         }
 
-        Stripe::setApiKey('sk_test_51QfUHZRxEehTOYAclh7XUpX6XG2rSBN3sSNU3PJ9IxLUSjqDE6njEuAefU6oiX9dgWf3QoS6R13gBzO1IodyimkN00kXWDJCLA');
+        $stripeSecretKey = trim($stripeSecretKey);
+        if ($stripeSecretKey === '') {
+            return new JsonResponse(
+                ['error' => 'Stripe is not configured (missing STRIPE_SECRET_KEY).'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        Stripe::setApiKey($stripeSecretKey);
 
         try {
             $checkout_session = StripeSession::create([

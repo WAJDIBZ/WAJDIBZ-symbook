@@ -54,7 +54,7 @@
 								<div class="flex space-x-3">
 									{% if bestBook.image %}
 										<div class="flex-shrink-0">
-											<img src="{{ asset('uploads/books/' ~ bestBook.image) }}" alt="{{ bestBook.titre }}" class="w-20 h-28 object-cover rounded-md shadow-md border border-gray-700">
+												<img src="{{ bestBook.image|book_image_url }}" alt="{{ bestBook.titre }}" class="w-20 h-28 object-cover rounded-md shadow-md border border-gray-700">
 										</div>
 									{% endif %}
 									<div>

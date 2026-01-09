@@ -54,7 +54,7 @@
 				{% for book in featuredBooks %}
 					<div class="carousel-item {% if loop.first %}active{% endif %} h-full" data-bs-interval="5000">
 						<div class="relative h-full">
-							<img src="{{ book.image }}" class="w-full h-full object-cover" alt="{{ book.titre }}">
+							<img src="{{ book.image|book_image_url }}" class="w-full h-full object-cover" alt="{{ book.titre }}">
 							<div class="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-80"></div>
 							<div class="absolute top-1/2 transform -translate-y-1/2 left-0 md:left-10 w-full md:w-1/2 text-white p-6 space-y-4">
 								<h1 class="font-playfair text-4xl md:text-5xl font-bold">{{ book.titre }}</h1>
@@ -154,7 +154,7 @@
 				{% for book in latestBooks %}
 					<div class="book-card rounded-xl overflow-hidden shadow-md bg-white">
 						<div class="relative">
-							<img src="{{ book.image }}" class="w-full h-64 object-cover" alt="{{ book.titre }}">
+							<img src="{{ book.image|book_image_url }}" class="w-full h-64 object-cover" alt="{{ book.titre }}">
 							<span class="absolute top-3 right-3 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">Nouveau</span>
 						</div>
 						<div class="p-5 flex flex-col h-48">

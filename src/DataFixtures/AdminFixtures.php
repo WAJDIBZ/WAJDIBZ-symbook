@@ -32,6 +32,18 @@ class AdminFixtures extends Fixture
         $admin->setAdresse('Administration Centrale');
 
         $manager->persist($admin);
+
+        $user = new User();
+        $user->setEmail('user@example.com');
+        $user->setNom('Test');
+        $user->setPrenom('User');
+        $user->setRoles(['ROLE_USER']);
+
+        $hashedUserPassword = $this->passwordHasher->hashPassword($user, 'User123!');
+        $user->setMotDePasse($hashedUserPassword);
+        $user->setAdresse('123 Rue de Test, 1000 Tunis');
+
+        $manager->persist($user);
         $manager->flush();
     }
 }

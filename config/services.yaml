@@ -4,6 +4,17 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+  env(ADMIN_EMAIL): 'admin@example.com'
+  env(SITE_BASE_URL): 'http://localhost:8000'
+  env(MERCURE_URL): 'http://localhost/.well-known/mercure'
+  env(MERCURE_PUBLIC_URL): 'http://localhost/.well-known/mercure'
+  env(MERCURE_JWT_SECRET): '!ChangeThisMercureHubJWTSecretKey!'
+  env(OAUTH_CLIENT_ID): ''
+  env(OAUTH_CLIENT_SECRET): ''
+  env(OAUTH_REFRESH_TOKEN): ''
+  env(OAUTH_TOKEN_URL): 'https://oauth2.googleapis.com/token'
+  env(STRIPE_PUBLIC_KEY): ''
+  env(STRIPE_SECRET_KEY): ''
   admin_email: "%env(ADMIN_EMAIL)%"
   # OAuth2 configuration
   oauth.client_id: "%env(OAUTH_CLIENT_ID)%"
@@ -53,6 +64,11 @@ services:
 
   # Configure SimpleSendEmailCommand with the admin email
   App\Command\SendSimpleEmailCommand:
+    arguments:
+      $adminEmail: "%admin_email%"
+
+  # Configure SendSimpleTestEmailCommand with the admin email
+  App\Command\SendSimpleTestEmailCommand:
     arguments:
       $adminEmail: "%admin_email%"
 

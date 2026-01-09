@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Commande;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,21 +18,52 @@ class CommandeRepository extends ServiceEntityRepository
     }
     public function countOrdersPerDay(\DateTimeInterface $from, \DateTimeInterface $to): array
     {
-        $qb = $this->createQueryBuilder('c')
-            ->select(
-                'YEAR(c.dateCommande)   AS year',
-                'MONTH(c.dateCommande)  AS month',
-                'DAY(c.dateCommande)    AS day',
-                'COUNT(c.id)            AS nbCommandes',
-                'SUM(c.montantTotal)    AS totalRevenue'
-            )
-            ->where('c.dateCommande BETWEEN :from AND :to')
-            ->setParameter('from', $from)
-            ->setParameter('to',   $to)
-            ->groupBy('year, month, day')
-            ->orderBy('year, month, day', 'ASC');
+        $conn = $this->getEntityManager()->getConnection();
+        $platform = $conn->getDatabasePlatform()->getName();
 
-        return $qb->getQuery()->getArrayResult();
+        // Column names follow the DB schema (snake_case)
+        $dateCol = 'date_commande';
+        $amountCol = 'montant_total';
+        $table = 'commande';
+
+        switch ($platform) {
+            case 'sqlite':
+                $yearExpr = "CAST(strftime('%Y', $dateCol) AS INTEGER)";
+                $monthExpr = "CAST(strftime('%m', $dateCol) AS INTEGER)";
+                $dayExpr = "CAST(strftime('%d', $dateCol) AS INTEGER)";
+                break;
+            case 'mysql':
+            case 'mariadb':
+                $yearExpr = "YEAR($dateCol)";
+                $monthExpr = "MONTH($dateCol)";
+                $dayExpr = "DAY($dateCol)";
+                break;
+            default:
+                // e.g. PostgreSQL
+                $yearExpr = "EXTRACT(YEAR FROM $dateCol)";
+                $monthExpr = "EXTRACT(MONTH FROM $dateCol)";
+                $dayExpr = "EXTRACT(DAY FROM $dateCol)";
+                break;
+        }
+
+        $sql = "
+            SELECT
+                $yearExpr  AS year,
+                $monthExpr AS month,
+                $dayExpr   AS day,
+                COUNT(id)  AS nbCommandes,
+                SUM($amountCol) AS totalRevenue
+            FROM $table
+            WHERE $dateCol BETWEEN :from AND :to
+            GROUP BY $yearExpr, $monthExpr, $dayExpr
+            ORDER BY $yearExpr ASC, $monthExpr ASC, $dayExpr ASC
+        ";
+
+        return $conn->fetchAllAssociative(
+            $sql,
+            ['from' => $from, 'to' => $to],
+            ['from' => Types::DATETIME_MUTABLE, 'to' => Types::DATETIME_MUTABLE]
+        );
     }
 
     public function getOrderStatsByPeriod(\DateTimeInterface $from, \DateTimeInterface $to): array

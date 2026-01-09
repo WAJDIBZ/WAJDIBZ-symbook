@@ -13,11 +13,7 @@
 			{% for livre in livres %}
 				<div class="col-md-4 mb-4">
 					<div class="card h-100">
-						{% if livre.image %}
-							<img src="{{ livre.image }}" class="card-img-top" alt="{{ livre.titre }}">
-						{% else %}
-							<img src="https://picsum.photos/200/300" class="card-img-top" alt="Image par défaut">
-						{% endif %}
+						<img src="{{ livre.image|book_image_url }}" class="card-img-top" alt="{{ livre.titre }}">
 						<div class="card-body">
 							<h5 class="card-title">{{ livre.titre }}</h5>
 							<p class="card-text">

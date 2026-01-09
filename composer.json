@@ -1,4 +1,6 @@
 {
+    "name": "wajdibz/symbook",
+    "description": "SymBook: online bookstore demo built with Symfony 7.2 (PostgreSQL, Mercure, Mailpit, Stripe).",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -59,7 +61,7 @@
             "symfony/flex": true,
             "symfony/runtime": true
         },
-        "bump-after-update": true,
+        "bump-after-update": false,
         "sort-packages": true
     },
     "autoload": {

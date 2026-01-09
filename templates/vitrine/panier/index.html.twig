@@ -48,7 +48,7 @@
 										class="p-6 flex flex-col sm:flex-row items-start sm:items-center">
 										<!-- Image -->
 										<div class="w-full sm:w-24 h-24 mb-4 sm:mb-0 sm:mr-6">
-											<img src="{{ item.image }}" alt="{{ item.titre }}" class="w-full h-full object-cover rounded-md">
+											<img src="{{ item.image|book_image_url }}" alt="{{ item.titre }}" class="w-full h-full object-cover rounded-md">
 										</div>
 
 										<!-- Informations -->
@@ -164,7 +164,12 @@ input.value = parseInt(input.value, 10) + 1;
 		<script src="https://js.stripe.com/v3/"></script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
-var stripe = Stripe('pk_test_51QfUHZRxEehTOYAcUzHqRzDCMsJl2QLGOYEbgqoPRaEx0GOh4uODC8vsUjDx4NBVLS6lQER7sz3S4bX74U58EtTn00oXseyKJb');
+var stripePublicKey = "{{ stripe_public_key|e('js') }}";
+if (!stripePublicKey) {
+  console.warn('Stripe is not configured (missing STRIPE_PUBLIC_KEY).');
+  return;
+}
+var stripe = Stripe(stripePublicKey);
 var checkoutButton = document.getElementById('checkout-button');
 if (checkoutButton) {
 checkoutButton.addEventListener('click', function (e) {

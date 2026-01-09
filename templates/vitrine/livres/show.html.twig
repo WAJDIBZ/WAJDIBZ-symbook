@@ -45,7 +45,7 @@
 					<!-- Image du livre -->
 					<div class="md:w-1/3 lg:w-2/5">
 						<div class="h-full w-full relative">
-							<img src="{{ livre.image }}" alt="{{ livre.titre }}" class="w-full h-full object-cover md:min-h-[500px]">
+							<img src="{{ livre.image|book_image_url }}" alt="{{ livre.titre }}" class="w-full h-full object-cover md:min-h-[500px]">
 							{% if livre.categorie %}
 								<span class="absolute top-4 left-4 bg-indigo-600 text-white text-sm font-bold px-3 py-1 rounded-full shadow-md">
 									{{ livre.categorie.libelle }}

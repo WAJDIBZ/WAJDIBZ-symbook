@@ -103,7 +103,7 @@
 							{% for livre in livres %}
 								<div class="book-card rounded-xl overflow-hidden shadow-md bg-white transition-transform hover:shadow-lg">
 									<div class="relative h-64">
-										<img src="{{ livre.image }}" class="w-full h-full object-cover" alt="{{ livre.titre }}">
+										<img src="{{ livre.image|book_image_url }}" class="w-full h-full object-cover" alt="{{ livre.titre }}">
 										{% if livre.categorie %}
 											<span class="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
 												{{ livre.categorie.libelle }}
