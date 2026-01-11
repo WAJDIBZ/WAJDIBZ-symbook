@@ -119,13 +119,6 @@ Example:
 STRIPE_SECRET_KEY=sk_test_...
 ```
 
-## Repo name on GitHub
-
-A good GitHub repo name for this project would be:
-
-- `symbook` or `symbook-symfony`
-
-You can rename the repo from GitHub Settings → Repository name.
 
 ## Security note
 
